@@ -51,7 +51,7 @@ public:
    * @param activeLow Set to true when the input level is LOW when the button is pressed, Default is true.
    * @param pullupActive Activate the internal pullup when available. Default is true.
    */
-  explicit OneButton(const int pin, const bool activeLow = true, const bool pullupActive = true);
+  explicit OneButton(const gpio_num_t pin, const bool activeLow = true, const bool pullupActive = true);
 
   // ----- Set runtime parameters -----
 
@@ -62,7 +62,7 @@ public:
    * @param mode Any of the modes also used in pinMode like INPUT or INPUT_PULLUP (default).
    * @param activeLow Set to true when the input level is LOW when the button is pressed, Default is true.
    */
-  void setup(const uint8_t pin, const uint8_t mode = INPUT_PULLUP, const bool activeLow = true);
+  void setup(const gpio_num_t pin, const uint8_t mode = INPUT_PULLUP, const bool activeLow = true);
 
 
   /**
@@ -209,7 +209,7 @@ public:
 
 
 private:
-  int _pin = -1;                 // hardware pin number.
+  gpio_num_t _pin = GPIO_NUM_NC;                 // hardware pin number.
   int _debounce_ms = 50;         // number of msecs for debounce times.
   unsigned int _click_ms = 400;  // number of msecs before a click is detected.
   unsigned int _press_ms = 800;  // number of msecs before a long button press is detected

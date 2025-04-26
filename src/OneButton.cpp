@@ -24,18 +24,18 @@
  * @brief Construct a new OneButton object but not (yet) initialize the IO pin.
  */
 OneButton::OneButton() {
-  _pin = -1;
+  _pin = GPIO_NUM_NC;
   // further initialization has moved to OneButton.h
 }
 
 // Initialize the OneButton library.
-OneButton::OneButton(const int pin, const bool activeLow, const bool pullupActive) {
+OneButton::OneButton(const gpio_num_t pin, const bool activeLow, const bool pullupActive) {
   setup(pin, pullupActive ? INPUT_PULLUP : INPUT, activeLow);
 }  // OneButton
 
 
 // initialize or re-initialize the input pin
-void OneButton::setup(const uint8_t pin, const uint8_t mode, const bool activeLow) {
+void OneButton::setup(const gpio_num_t pin, const uint8_t mode, const bool activeLow) {
   _pin = pin;
 
   if (activeLow) {
@@ -47,7 +47,11 @@ void OneButton::setup(const uint8_t pin, const uint8_t mode, const bool activeLo
     _buttonPressed = HIGH;
   }
 
-  pinMode(pin, mode);
+  gpio_set_direction(pin, GPIO_MODE_INPUT);
+  if (mode == INPUT_PULLUP) 
+  {
+    gpio_set_pull_mode(pin, GPIO_PULLUP_ONLY);
+  }
 }
 
 
@@ -215,7 +219,7 @@ bool OneButton::debounce(const bool value) {
  */
 void OneButton::tick(void) {
   if (_pin >= 0) {
-    _fsm(debounce(digitalRead(_pin) == _buttonPressed));
+    _fsm(debounce(gpio_get_level(_pin) == _buttonPressed));
   }
 }  // tick()
 
